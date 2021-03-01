@@ -1,4 +1,5 @@
-At the top of this document, give your project a meaningful name that at least suggests the topic of the project.  Don't call it "Software Systems Project 1".  List the complete names of all members of the team. 
+# Building a Virtual Machine
+### By Gati A., Zoe M., and Caitlin C.
 
 5) Answer the questions in the Content section:
 - What is the goal of your project; for example, what do you plan to make, and what should it do?  Identify a lower bound you are confident you can achieve and a stretch goal that is more ambitious.
