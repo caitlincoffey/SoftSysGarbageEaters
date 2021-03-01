@@ -1,3 +1,3 @@
 # SoftSysExploringOpenCV
 
-Our first SoftSys Project
+By Gati A., Zoe M., and Caitlin C.
