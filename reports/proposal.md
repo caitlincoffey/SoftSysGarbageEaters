@@ -1,7 +1,8 @@
 # Building a Virtual Machine
 ### By Gati A., Zoe M., and Caitlin C.
 
-5) Answer the questions in the Content section:
+Our goal is to design and build a virtual machine in C. It should function as a normal virtual machine, e.g. run processes, emulate an basic Operating System, etc. Our lower bound is to implement an MVP of a Virtual Machine. A stretch goal of ours is to implement a Virtual Machine with a Garbage Collector. 
+
 - What is the goal of your project; for example, what do you plan to make, and what should it do?  Identify a lower bound you are confident you can achieve and a stretch goal that is more ambitious.
 - What are your learning goals; that is, what do you intend to achieve by working on this project?
 - What do you need to get started?  Have you found the resources you need, do you have a plan to find them, or do you need help?
