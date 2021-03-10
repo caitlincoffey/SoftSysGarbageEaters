@@ -16,7 +16,7 @@
 uint16_t get_sign_extension(uint16_t n, int num_bits);
 uint16_t read_from_memory(uint16_t address);
 void write_to_memory(uint16_t address, uint16_t value);
-uint16_t read_program_code_into_memory(FILE *code);
+int read_program_code_into_memory(const char path_to_code);
 
 /* instruction set function definitions */
 /** NOTE: I think we should divide and conquer to write them all
@@ -30,22 +30,46 @@ uint16_t op_add(uint16_t bits);
  * 2^16 memory locations of 16 bits each.
  * Addresses are numbered from 0 (x0000) to 65,535 (xFFFF)
  */
-
 uint16_t memory[65535];
 
 uint16_t read_from_memory(uint16_t address) {
 
-  // if (address == kbsr) { // placeholder
-  //   // we have some key -> hashing
-  //   // hashing
-  //   // translating address to something usable
-  // }
+    // if (address == kbsr) { // placeholder
+    //   // we have some key -> hashing
+    //   // hashing
+    //   // translating address to something usable
+    // }
 
-return memory[address];
+  return memory[address];
 }
 
 void write_to_memory(uint16_t address, uint16_t value){
   memory[address] = value;
+}
+
+int read_program_code_into_memory(const char *path_to_code) {
+  FILE* code_file = fopen(path_to_code, "r");
+
+  /* Return error if we cannot read file */
+  if (!code_file) {
+    fprintf(stderr, "Error: Could not find file %s\n", path_to_code)
+    return 0;
+  };
+
+  /* The first 16 bits of the program file
+  specify the address in memory where the program should start. */
+  uint16_t program_start;
+  fread(&program_start, 16, 1, code_file);
+
+  /* reading once because we are reading the entire file */
+  uint16_t max_space = 65535 - program_start; // 2^16 - program_start
+  uint16_t *point_to_mem = memory + program_start;
+  unsigned long read_to_mem = fread(point_to_mem, 16, max_space, code_file);
+  // idk how much this needs but so I'll give it a long
+
+  fclose(code_file);
+  return 1;
+
 }
 
 /* ENUMS */
@@ -62,8 +86,11 @@ r5,
 r6,
 r7,
 rpc,
-rf
+rf,
+rsize
 };
+
+uint16_t reg[rsize];
 
 /* intruction set: 14 instructions, 1 reserved, 1 unused */
 
@@ -90,7 +117,15 @@ int main(int argc, const char *argv[])
     // NOTE: if anything goes wrong, change this status
     int status = 1;
 
-    read_program_code_into_memory();
+    if (argc <= 1) {
+       fprintf(stderr, "Error: No input files\n");
+       return 0;
+   }
+
+    // Filename or path to file of our program we want to run
+    char *path_to_code = argv[1];
+
+    read_program_code_into_memory(path_to_code);
 
     /* 0x3000 is the default PC position, start of memory available for user programs. */
     int PC_INIT = 0x3000;
