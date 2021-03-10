@@ -1,6 +1,6 @@
 /**
  * Garbage Eaters: LC-3 Virtual Machine
- * 
+ *
  * Date: 03/06/2021
  * Authors: Gati Aher, Navi Sai, Caitlin Coffey, Zoe McGinnis
  **/
@@ -16,11 +16,11 @@
 uint16_t get_sign_extension(uint16_t n, int num_bits);
 uint16_t read_from_memory(uint16_t address);
 void write_to_memory(uint16_t address, uint16_t value);
-uint16_t read_program_code_into_memory();
+uint16_t read_program_code_into_memory(FILE *code);
 
 /* instruction set function definitions */
 /** NOTE: I think we should divide and conquer to write them all
- * and then we join them together with pipelining in the main functions? 
+ * and then we join them together with pipelining in the main functions?
  * I still need to figure out what exactly that entails*/
 /* each function gets an instruction with the first four bits (opcode) removed */
 uint16_t op_add(uint16_t bits);
@@ -31,9 +31,39 @@ uint16_t op_add(uint16_t bits);
  * Addresses are numbered from 0 (x0000) to 65,535 (xFFFF)
  */
 
+uint16_t memory[65535];
+
+uint16_t read_from_memory(uint16_t address) {
+
+  // if (address == kbsr) { // placeholder
+  //   // we have some key -> hashing
+  //   // hashing
+  //   // translating address to something usable
+  // }
+
+return memory[address];
+}
+
+void write_to_memory(uint16_t address, uint16_t value){
+  memory[address] = value;
+}
+
 /* ENUMS */
 
 /* registers: 8 general, 1 program counter (PC), 1 condition register */
+
+enum registers {
+r0=0,
+r1,
+r2,
+r3,
+r4,
+r5,
+r6,
+r7,
+rpc,
+rf
+};
 
 /* intruction set: 14 instructions, 1 reserved, 1 unused */
 
@@ -42,6 +72,14 @@ uint16_t op_add(uint16_t bits);
 /* trap codes: 6 trap code operations */
 
 /* memory-mapped I/O: memory addresses xFE00 through xFFFF have been allocated to designate each I/O device register. */
+
+enum mem_registers{
+  kbsr = 0xFE00, // keyboard status register
+  kbdr = 0xFE02, // keyboard data register
+  dsr = 0xFE04, // display status register
+  ddr = 0xFE06, // display data register
+  mcr = 0xFFFE // machine control register
+};
 
 /* priority level, processor status register, privilege mode, privilege mode exception? */
 /* QUESTION: do we need to implement operating system and supervisor stack: memory adresses x0200 through x2FFF */
