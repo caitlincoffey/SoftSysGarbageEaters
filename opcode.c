@@ -1,4 +1,5 @@
 #include "opcode.h"
+
 /* Opcode Functions */
 
 
@@ -6,6 +7,18 @@
 *  - use mask of 1s of size of target section to only keep bits of target section (remove bits left of target section)
 *  - use bit-shift to erase bits right of target section
 */
+
+void op_ldi(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  uint16_t PCoffset9 = bits & 0x1FF;
+  uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  uint16_t address_2 = read_from_memory(address_1);
+  reg[DR] = read_from_memory(address_2);
+  update_flag(reg[DR]);
+}
+
 
 void op_add(uint16_t bits)
 {
@@ -82,16 +95,6 @@ void op_ld(uint16_t bits)
   update_flag(reg[DR]);
 }
 
-void op_ldi(uint16_t bits)
-{
-  /* destination register (DR) */
-  uint16_t DR = (bits >> 9) & 0x7;
-  uint16_t PCoffset9 = bits & 0x1FF;
-  uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
-  uint16_t address_2 = read_from_memory(address_1);
-  reg[DR] = read_from_memory(address_2);
-  update_flag(reg[DR]);
-}
 
 void op_ldr(uint16_t bits)
 {
