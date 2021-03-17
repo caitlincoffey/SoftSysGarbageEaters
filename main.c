@@ -79,7 +79,6 @@ int read_program_code_into_memory(const char *path_to_code)
 /* ENUMS */
 
 /* registers: 8 general, 1 program counter (PC), 1 condition register */
-
 enum registers
 {
   R_0 = 0,
@@ -97,8 +96,8 @@ enum registers
 
 uint16_t reg[R_SIZE];
 
-/* intruction set: 14 instructions, 1 reserved, 1 unused */
-/* can use */
+/* instruction set: 14 instructions, 1 reserved, 1 unused */
+/* represent 4 bit binary opcodes with numbers 0-15 */
 enum instruction_set
 {
   OP_BR = 0, /* branch */
@@ -119,12 +118,26 @@ enum instruction_set
   OP_TRAP    /* execute trap */
 };
 
-/* condition codes: three 1-bit registers: N (negative) Z (zero) P (positive) */
+/* condition flags: three 1-bit registers: N (negative) Z (zero) P (positive) */
+enum cond_flag
+{
+  N = 0b100,
+  Z = 0b010,
+  P = 0b001
+};
 
 /* trap codes: 6 trap code operations */
+enum trap_codes
+{
+  T_GETC = 0x20,
+  T_OUT,
+  T_PUTS,
+  T_IN,
+  T_PUTSP,
+  T_HALT
+};
 
 /* memory-mapped I/O: memory addresses xFE00 through xFFFF have been allocated to designate each I/O device register. */
-
 enum mem_registers
 {
   M_KBSR = 0xFE00, // keyboard status register
@@ -149,9 +162,8 @@ int main(int argc, const char *argv[])
     return 0;
   }
 
-  // Filename or path to file of our program we want to run
+  // File path to to program LC-3 should run
   char *path_to_code = argv[1];
-
   read_program_code_into_memory(path_to_code);
 
   /* 0x3000 is the default PC position, start of memory available for user programs. */
