@@ -40,6 +40,7 @@ void op_ld(uint16_t bits);
 void op_ldi(uint16_t bits);
 void op_ldr(uint16_t bits);
 void op_lea(uint16_t bits);
+void op_trap(uint16_t bits);
 
 /* ENUMS */
 
@@ -241,7 +242,6 @@ void op_ld(uint16_t bits)
 {
   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
-  /* (PCoffset9) */
   uint16_t PCoffset9 = bits & 0x1FF;
   uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   reg[DR] = read_from_memory(address);
@@ -252,8 +252,7 @@ void op_ldi(uint16_t bits)
 {
   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
-  /* (PCoffset9) */
-  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t PCoffset9 = bits & 0x1FF;
   uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   uint16_t address_2 = read_from_memory(address_1);
   reg[DR] = read_from_memory(address_2);
@@ -265,7 +264,7 @@ void op_ldr(uint16_t bits)
   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
   uint16_t BaseR = (bits >> 6) & 0x7;
-  uint16_t offset6 = bits & 0x9;
+  uint16_t offset6 = bits & 0x3f;
   uint16_t address = reg[BaseR] + get_sign_extension(offset6, 6);
   reg[DR] = read_from_memory(address);
   update_flag(reg[DR]);
@@ -275,11 +274,22 @@ void op_lea(uint16_t bits)
 {
   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
-  /* (PCoffset9) */
-  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t PCoffset9 = bits & 0x1FF;
   uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   reg[DR] = address;
   update_flag(reg[DR]);
+}
+
+// TODO: decide if we can put trap vector table in memory or if we should just implement functions
+
+void op_trap(uint16_t bits)
+{
+  /* First R7 is loaded with the incremented PC. (This enables a return to the instruction
+physically following the TRAP instruction in the original program after the service
+routine has completed execution.) */
+  uint16_t trapvector8 = bits & 0xFF;
+  reg[R_7] = reg[R_PC];
+  reg[R_PC] = read_from_memory(trapvector8);
 }
 
 /* priority level, processor status register, privilege mode, privilege mode exception? */
