@@ -3,6 +3,7 @@
 
 #include "opcode.h"
 #include <stdint.h>
+#include <stdio.h>
 
 uint16_t memory[65535];
 

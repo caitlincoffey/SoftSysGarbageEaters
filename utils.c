@@ -1,10 +1,13 @@
 #include "utils.h"
+#include "memory.h"
 
 /* General Helper Functions */
 
-uint16_t get_sign_extension(uint16_t n, int num_bits) {
+uint16_t get_sign_extension(uint16_t n, int num_bits)
+{
   uint16_t n_first = n >> num_bits;
-  if (n_first & 0x1) {
+  if (n_first & 0x1)
+  {
     uint16_t var = ((0xFFFF << num_bits) | n);
     return var;
   }
