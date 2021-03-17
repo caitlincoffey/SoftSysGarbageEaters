@@ -36,6 +36,10 @@ int read_program_code_into_memory(const char *path_to_code);
 void op_add(uint16_t bits);
 void op_and(uint16_t bits);
 void op_not(uint16_t bits);
+void op_ld(uint16_t bits);
+void op_ldi(uint16_t bits);
+void op_ldr(uint16_t bits);
+void op_lea(uint16_t bits);
 
 /* ENUMS */
 
@@ -230,6 +234,51 @@ void op_not(uint16_t bits)
   /* first source register (SR1) */
   uint16_t SR1 = (bits >> 6) & 0x7;
   reg[DR] = ~reg[SR1];
+  update_flag(reg[DR]);
+}
+
+void op_ld(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  /* (PCoffset9) */
+  uint16_t PCoffset9 = bits & 0x1FF;
+  uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  reg[DR] = read_from_memory(address);
+  update_flag(reg[DR]);
+}
+
+void op_ldi(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  /* (PCoffset9) */
+  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  uint16_t address_2 = read_from_memory(address_1);
+  reg[DR] = read_from_memory(address_2);
+  update_flag(reg[DR]);
+}
+
+void op_ldr(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  uint16_t BaseR = (bits >> 6) & 0x7;
+  uint16_t offset6 = bits & 0x9;
+  uint16_t address = reg[BaseR] + get_sign_extension(offset6, 6);
+  reg[DR] = read_from_memory(address);
+  update_flag(reg[DR]);
+}
+
+void op_lea(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  /* (PCoffset9) */
+  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  reg[DR] = address;
   update_flag(reg[DR]);
 }
 
