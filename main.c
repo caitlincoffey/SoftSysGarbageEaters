@@ -115,9 +115,18 @@ enum mem_registers
 
 /* General Helper Functions */
 
+uint16_t get_sign_extension(uint16_t n, int num_bits) {
+  uint16_t n_first = n >> num_bits;
+  if (n_first & 0x1) {
+    uint16_t var = ((0xFFFF << num_bits) | n);
+    return var;
+  }
+  return n;
+}
+
 void update_flag(uint16_t value)
 /*
-  Update the condition flag register depending on the passed in value.
+Update the condition flag register depending on the passed in value.
 */
 {
   if (value == 0)
