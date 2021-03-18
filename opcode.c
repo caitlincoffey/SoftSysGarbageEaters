@@ -128,3 +128,19 @@ routine has completed execution.) */
   reg[R_7] = reg[R_PC];
   reg[R_PC] = read_from_memory(trapvector8);
 }
+
+
+// TODO: Zoe finish implementing this
+
+  // uint16_t DR = (bits >> 9) & 0x7;
+  // uint16_t PCoffset9 = bits & 0x1FF;
+  // uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  // reg[DR] = read_from_memory(address);
+  // update_flag(reg[DR]);
+
+
+void op_st(uint16_t bits)
+{
+  uint16_t DR = (bits >> 9) & 0x7;
+  uint16_t PCoffset9 = bits & 0x1FF;
+}

@@ -1,3 +1,6 @@
+#ifndef DECODE_C_
+#define DECODE_H_
+
 #include <stdint.h>
 #include <stdio.h>
 
@@ -38,3 +41,5 @@ enum instruction_set
 
 
 enum instruction_set decode(int instruction);
+
+#endif 

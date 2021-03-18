@@ -22,6 +22,14 @@ enum registers
     R_SIZE
 };
 
+enum mem_registers
+{
+  M_KBSR,
+  M_KBDR,
+  M_DSR,
+  M_DDR,
+  M_MCR,
+};
 
 uint16_t reg[R_SIZE];
 
