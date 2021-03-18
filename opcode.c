@@ -140,9 +140,19 @@ routine has completed execution.) */
 
 void op_br(uint16_t bits)
 {
-/* Breaks program upon reaching a certain value */
-uint16_t pc_offset = get_sign_extension(bits & 0x1FF, 9);
-uint16_t conditional = (bits >> 9) & 0x7;
+  /* Breaks program upon reaching a certain value */
+  uint16_t pc_offset = get_sign_extension(bits & 0x1FF, 9);
+  uint16_t conditional = (bits >> 9) & 0x7;
+  if (conditional == reg[R_F]) { // is R_F a conditional register?
+    reg[R_PC] += pc_offset;
+  }
+}
+
+void op_jmp(uint16_t bits)
+{
+  /* Jumping into a new address! :D */
+  uint16_t r1 = (bits >> 6) & 0x7; // putting into unsigned 16 bit int
+  reg[R_PC] = reg[r1]; // adjust program counter to move to the new place
 }
 
 void op_st(uint16_t bits)
