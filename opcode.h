@@ -24,6 +24,9 @@ void op_ldr(uint16_t bits);
 void op_lea(uint16_t bits);
 void op_trap(uint16_t bits);
 void op_st(uint16_t bits);
+void op_br(uint16_t bits);
+void op_jmp(uint16_t bits);
+void op_jsr(uint16_t bits);
 
 uint16_t get_sign_extension(uint16_t n, int num_bits);
 void update_flag(uint16_t value);
