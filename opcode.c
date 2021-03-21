@@ -21,59 +21,49 @@ enum trap_codes
 */
 
 void op_add(uint16_t bits)
-{
-  /* destination register (DR) */
-  uint16_t DR = (bits >> 9) & 0x7;
-  /* first source register (SR1) */
-  uint16_t SR1 = (bits >> 6) & 0x7;
-  /* check flag source register for mode */
-  uint16_t SR2 = bits & 0x7;
-
-  reg[DR] = reg[SR1] + reg[SR2];
-
-  update_flag(reg[DR]);
-}
-
-void op_addi(uint16_t bits)
-{
-  /* destination register (DR) */
-  uint16_t DR = (bits >> 9) & 0x7;
-
-  /* first source register (SR1) */
-  uint16_t SR1 = (bits >> 6) & 0x7;
-  /* check flag source register for mode */
-
-  uint16_t imm5 = get_sign_extension(bits & 0x1, 5);
-  reg[DR] = reg[SR1] + imm5;
-
-  update_flag(reg[DR]);
-}
-
-void op_andi(uint16_t bits)
-{
-  /* destination register (DR) */
-  uint16_t DR = (bits >> 9) & 0x7;
-  /* first source register (SR1) */
-  uint16_t SR1 = (bits >> 6) & 0x7;
-
-  uint16_t imm5 = get_sign_extension(bits & 0x1F, 5);
-  reg[DR] = reg[SR1] & imm5;
-
-  update_flag(reg[DR]);
-}
+ {
+   /* destination register (DR) */
+   uint16_t DR = (bits >> 9) & 0x7;
+   /* first source register (SR1) */
+   uint16_t SR1 = (bits >> 6) & 0x7;
+   /* check flag source register for mode of ADD */
+   if ((bits >> 5) & 0x1)
+   {
+     /* mode 1: add a small constant */
+     uint16_t imm5 = get_sign_extension(bits & 0x1, 5);
+     reg[DR] = reg[SR1] + imm5;
+   }
+   else
+   {
+     /* mode 2: add value from second source register */
+     uint16_t SR2 = (bits >> 0);
+     reg[DR] = reg[SR1] + reg[SR2];
+   }
+   update_flag(reg[DR]);
+ }
 
 void op_and(uint16_t bits)
-{
-  /* destination register (DR) */
-  uint16_t DR = (bits >> 9) & 0x7;
-  /* first source register (SR1) */
-  uint16_t SR1 = (bits >> 6) & 0x7;
+ {
+   /* destination register (DR) */
+   uint16_t DR = (bits >> 9) & 0x7;
+   /* first source register (SR1) */
+   uint16_t SR1 = (bits >> 6) & 0x7;
+   /* check flag source register for mode */
+   if ((bits >> 5) & 0x1)
+   {
+     /* mode 1: and a small constant */
+     uint16_t imm5 = get_sign_extension(bits & 0x1F, 5);
+     reg[DR] = reg[SR1] & imm5;
+   }
+   else
+   {
+     /* mode 2: and value from second source register (SR2) */
+     uint16_t SR2 = bits & 0x7;
+     reg[DR] = reg[SR1] & reg[SR2];
+   }
+   update_flag(reg[DR]);
+ }
 
-  uint16_t SR2 = bits & 0x7;
-  reg[DR] = reg[SR1] & reg[SR2];
-  update_flag(reg[DR]);
-
-}
 
 void op_not(uint16_t bits)
 {

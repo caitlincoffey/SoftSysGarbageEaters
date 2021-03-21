@@ -68,10 +68,16 @@ int read_program_code_into_memory(const char *path_to_code)
 
   /* reading once because we are reading the entire file */
   uint16_t max_space = 65535 - program_start; // 2^16 - program_start
+
+  // memory defined earlier
   uint16_t *point_to_mem = memory + program_start;
-  unsigned long read_to_mem = fread(point_to_mem, 16, max_space, code_file);
-  // idk how much this needs but so I'll give it a long
+  fread(point_to_mem, 16, max_space, code_file);
 
   fclose(code_file);
   return 1;
+}
+
+int update_pc(int pc, int pc_update) {
+  int mem_loc = reg[R_PC];
+  reg[R_PC] = mem_loc + 16;
 }
