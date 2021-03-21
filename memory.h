@@ -24,10 +24,10 @@ enum registers
 
 enum mem_registers
 {
-  M_KBSR,
-  M_KBDR,
-  M_DSR,
-  M_DDR,
+  M_KBSR, // KBSR[15] is 1 then keyboard has got new character
+  M_KBDR, // Keyboard data register: [7:0] last types ascii code
+  M_DSR, // Bit[15] when device is ready to display a new character on the screen
+  M_DDR, // [7:0] is the character the device would like to display to the screen
   M_MCR,
 };
 

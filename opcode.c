@@ -119,6 +119,35 @@ routine has completed execution.) */
   reg[R_PC] = read_from_memory(trapvector8);
 }
 
+char trap_getc()
+{
+  char character;
+  // get 7 least significant bits of R_0
+  uint8_t ascii = reg[R_0] & 0xFF;
+  character = (char) ascii;
+  return character;
+}
+
+void trap_out()
+{
+  fprintf(stdout, "%c", reg[R_0]);
+}
+
+void trap_in()
+{
+  char character = trap_getc;
+  trap_out();
+}
+
+void trap_puts()
+{
+  //unsure how to finish this: but basically just loop through an print each character until /0
+  char * character;
+  character = (char)memory[reg[R_0]];
+  while (character != "/0"){
+
+  }
+}
 
 // TODO: Zoe finish implementing this
 
