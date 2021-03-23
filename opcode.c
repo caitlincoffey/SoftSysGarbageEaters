@@ -174,6 +174,28 @@ void op_jmp(uint16_t bits)
   reg[R_PC] = reg[r1]; // adjust program counter to move to the new place
 }
 
+void op_jsr(uint16_t bits)
+{
+  /* Jumping into a new address and linking back prev location */
+
+  // assigning program counter to temp register so we can link back
+  reg[R_R7] = reg[R_PC];
+
+  // checking if opcode indicates jsr or jsrr
+  uint16_t jsr_flag = (bits >> 11) & 1;
+  if (jsr_flag) {
+      // we run jsr, taking a PCoffset
+      uint16_t pc_offset = get_sign_extension(bits & 0x7FF, 11);
+      reg[R_PC] += pc_offset;  // jump via offset given
+    }
+
+  else {
+    // We run jsrr, taking BaseR
+    uint16_t r1 = (bits >> 6) & 0x7;
+    reg[R_PC] = reg[r1]; // jump to register val
+  }
+}
+
 void op_st(uint16_t bits)
 {
   uint16_t DR = (bits >> 9) & 0x7;
