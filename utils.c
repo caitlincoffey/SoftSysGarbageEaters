@@ -65,13 +65,21 @@ int read_program_code_into_memory(const char *path_to_code)
   specify the address in memory where the program should start. */
   uint16_t program_start;
   fread(&program_start, 16, 1, code_file);
+  // convert to little endian
+  program_start = (program_start << 8) | (program_start >> 8);
 
   /* reading once because we are reading the entire file */
   uint16_t max_space = 65535 - program_start; // 2^16 - program_start
 
   // memory defined earlier
   uint16_t *point_to_mem = memory + program_start;
-  fread(point_to_mem, 16, max_space, code_file);
+
+  // reading in 16-bit increments
+  while (fread(point_to_mem, 16, max_space, code_file) > 0) {
+    // converting to little endian
+    *point_to_mem = (*point_to_mem << 8) | (*point_to_mem >> 8);
+    point_to_mem++;
+  }
 
   fclose(code_file);
   return 1;
