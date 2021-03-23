@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include "opcode.h"
 #include "memory.h"
-#include "decode.h"
 #include "utils.h"
 
 
