@@ -8,7 +8,7 @@
 /* represent 4 bit binary opcodes with numbers 0-15 */
 enum instruction_set
  {
-   OP_BR = 0, /* branch */
+   OP_BR = 0,
    OP_ADD,    /* add  */
    OP_LD,     /* load */
    OP_ST,     /* store */
@@ -29,4 +29,4 @@ enum instruction_set
 
 enum instruction_set decode(int instruction);
 
-#endif 
+#endif

@@ -84,8 +84,3 @@ int read_program_code_into_memory(const char *path_to_code)
   fclose(code_file);
   return 1;
 }
-
-int update_pc(int pc, int pc_update) {
-  int mem_loc = reg[R_PC];
-  reg[R_PC] = mem_loc + 16;
-}

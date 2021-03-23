@@ -31,6 +31,7 @@ int main(int argc, const char *argv[])
 
   /* 0x3000 is the default PC position, start of memory available for user programs. */
   int PC_INIT = 0x3000;
+  reg[R_PC] = PC_INIT;
 
   while (1)
   {
@@ -41,7 +42,8 @@ int main(int argc, const char *argv[])
          * increment PC register by 4,
          * and choose whether to take that as next PC or to take result of a branch / jump calculation as the next PC
          * */
-    uint16_t opcode;
+    uint16_t instruction = read_from_memory(reg[R_PC]++); // load instruction from memory
+    uint16_t opcode = instruction >> 12;
 
     /**
          * 2. ID. instruction decode and register fetch
@@ -50,7 +52,7 @@ int main(int argc, const char *argv[])
          * */
     switch (opcode)
     {
-    case 1:
+    case OP_BR:
       // NOTE: I think 3 and 4 and specific to the opcode and should happen in the function
       // QUESTION: is 5 going to be the same for all the opcodes?
       /* 3. EX. execute */
@@ -59,9 +61,53 @@ int main(int argc, const char *argv[])
              * update general registers with output
              * update COND register with N Z P value
              * */
-      op_add(1);
+      op_br(instruction);
       break;
-
+    case OP_ADD:   /* add */
+      op_add(instruction);
+      break;
+    case OP_LD:     /* load */
+      op_ld(instruction);
+      break;
+    case OP_ST:     /* store */
+      op_st(instruction);
+      break;
+    case OP_JSR:    /* jump register */
+      op_jsr(instruction);
+      break;
+    case OP_AND:    /* bitwise and */
+      op_and(instruction);
+      break;
+    case OP_LDR:    /* load register */
+      op_ldr(instruction);
+      break;
+    case OP_STR:    /* store register */
+      op_str(instruction);
+      break;
+    case OP_RTI:    /* unused */
+      op_rti(instruction);
+      break;
+    case OP_NOT:    /* bitwise not */
+      op_not(instruction);
+      break;
+    case OP_LDI:    /* load indirect */
+      op_ldi(instruction);
+      break;
+    case OP_STI:    /* store indirect */
+      op_sti(instruction);
+      break;
+    case OP_JMP:    /* jump */
+      op_jmp(instruction);
+      break;
+    case OP_RES:    /* reserved (unused) */
+      op_res(instruction);
+      break;
+    case OP_LEA:   /* load effective address */
+      op_lea(instruction);
+      break;
+    case OP_TRAP:    /* execute trap */
+      // TODO implement
+      break;
     default:
       break;
     }

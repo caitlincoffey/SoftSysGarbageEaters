@@ -20,7 +20,7 @@ enum instruction_set decode(int instruction) {
         case 0:
           return OP_ADD;
 
-        case 1: 
+        case 1:
           return OP_ADDI;
 
         default:
@@ -48,11 +48,11 @@ enum instruction_set decode(int instruction) {
     // 0000 (br)
     case 0x0:
       return OP_BR;
-    
+
     // 1100 (JMP/RET)
     case 0xC:
       // gathering bits 6 through 8
-      bit6t8 = 0x1C0 & instruction; 
+      bit6t8 = 0x1C0 & instruction;
       switch(bit6t8){
         case 0x7:
           return OP_RET;
@@ -68,7 +68,7 @@ enum instruction_set decode(int instruction) {
       switch(bit11){
         case 0:
           return OP_JSRR;
-        
+
         case 1:
           return OP_JSR;
 
@@ -85,19 +85,19 @@ enum instruction_set decode(int instruction) {
     // 1010 (LDI)
     case 0xA:
       return OP_LDI;
-    
+
     // 0110 (LDR)
     case 0x6:
       return OP_LDR;
-    
+
     // 1110 (LEA)
     case 0xE:
       return OP_LEA;
-    
+
     // 1001 (NOT)
     case 0x9:
       return OP_NOT;
-    
+
     // 1000 (RTI)
     case 0x8:
       return OP_RTI;
@@ -105,19 +105,19 @@ enum instruction_set decode(int instruction) {
     // 0011 (ST)
     case 0x3:
       return OP_ST;
-    
+
     // 1011 (STI)
     case 0xB:
       return OP_STI;
-    
+
     // 0111 (STR)
     case 0x7:
       return OP_STR;
-    
+
     // 1111 (TRAP)
     case 0xF:
       return OP_TRAP;
-    
+
     // unused opcode
     default:
       return OP_RES;
