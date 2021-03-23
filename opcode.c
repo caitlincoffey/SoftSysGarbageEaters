@@ -116,37 +116,96 @@ physically following the TRAP instruction in the original program after the serv
 routine has completed execution.) */
   uint16_t trapvector8 = bits & 0xFF;
   reg[R_7] = reg[R_PC];
+  switch (trapvector8)
+  {
+  case T_GETC:
+    trap_getc();
+    break;
+  case T_OUT:
+    trap_out();
+    break;
+  case T_PUTS:
+    trap_puts();
+    break;
+  case T_IN:
+    trap_in();
+    break;
+  case T_PUTSP:
+    trap_puts();
+    break;
+  case T_HALT:
+    trap_halt();
+    break;
+  default:
+    break;
+  }
   reg[R_PC] = read_from_memory(trapvector8);
 }
 
-char trap_getc()
+void trap_getc()
 {
-  char character;
-  // get 7 least significant bits of R_0
-  uint8_t ascii = reg[R_0] & 0xFF;
-  character = (char) ascii;
-  return character;
+  /**
+   * Read a single character from the keyboard.
+   * The character is not echoed onto theconsole. 
+   * Its ASCII code is copied into R0. 
+   * The high eight bits of R0 are cleared.
+   */
+  reg[R_0] = getchar() & 0xFF;
 }
 
 void trap_out()
 {
+  /**
+   * Write a character in R0[7:0] to the console display.
+   * Avoid automatic buffering
+   * Clear (or flush) the output buffer and move the buffered data to console 
+   */
   fprintf(stdout, "%c", reg[R_0]);
+  fflush(stdout);
 }
 
 void trap_in()
 {
-  char character = trap_getc;
+  /**
+   * Print a prompt on the screen and read a single character from the keyboard. 
+   * The character is echoed onto the console monitor, and its ASCII code is copied into R0.
+   * The high eight bits of R0 are cleared.
+   */
+  puts("Enter a character:\n");
+  trap_getc();
   trap_out();
 }
 
 void trap_puts()
 {
-  //unsure how to finish this: but basically just loop through an print each character until /0
-  char * character;
-  character = (char)memory[reg[R_0]];
-  while (character != "/0"){
-
+  /**
+   * Write a string of ASCII characters to the console.
+   * The characters are contained in consecutive memory locations, two characters per memory location, starting with the address specified in R0.
+   * The ASCII code contained in bits [7:0] of a memory location is written to the console first.
+   * Then the ASCII code contained in bits [15:8] of that memory location is written to the console.
+   * (A character string consisting of an odd number of characters to be written will have x00 in bits [15:8] of the memory location containing the last character to be written.)
+   * Writing terminates with the occurrence of x0000 in a memory location.
+   */
+  uint16_t *start = memory[reg[R_0]];
+  while (*start)
+  {
+    // QUESTION: do we have to convert back to big endian
+    char first_char = *start & 0xFF;
+    putc(first_char, stdout);
+    char second_char = *start >> 8;
+    if (second_char) {
+      // if second char exists
+      putc(first_char, stdout);
+    }
   }
+  fflush(stdout); // move the buffered data to console 
+}
+
+void trap_halt()
+{
+  /** Halt execution and print a message on the console. */
+  // TODO: figure out how to halt
+  // need to stop main loop
 }
 
 // TODO: Zoe finish implementing this
