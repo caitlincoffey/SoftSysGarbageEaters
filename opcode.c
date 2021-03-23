@@ -85,6 +85,17 @@ void op_ld(uint16_t bits)
   update_flag(reg[DR]);
 }
 
+void op_ldi(uint16_t bits)
+{
+  /* destination register (DR) */
+  uint16_t DR = (bits >> 9) & 0x7;
+  /* (PCoffset9) */
+  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  uint16_t address_2 = read_from_memory(address_1);
+  reg[DR] = read_from_memory(address_2);
+  update_flag(reg[DR]);
+}
 
 void op_ldr(uint16_t bits)
 {
@@ -208,14 +219,6 @@ void trap_halt()
   // need to stop main loop
 }
 
-// TODO: Zoe finish implementing this
-
-  // uint16_t DR = (bits >> 9) & 0x7;
-  // uint16_t PCoffset9 = bits & 0x1FF;
-  // uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
-  // reg[DR] = read_from_memory(address);
-  // update_flag(reg[DR]);
-
 void op_br(uint16_t bits)
 {
   /* Breaks program upon reaching a certain value */
@@ -257,6 +260,24 @@ void op_jsr(uint16_t bits)
 
 void op_st(uint16_t bits)
 {
-  uint16_t DR = (bits >> 9) & 0x7;
-  uint16_t PCoffset9 = bits & 0x1FF;
+  uint16_t SR = (bits >> 9) & 0x7;
+  uint16_t PCoffset9 = get_sign_extension(bits, 9);
+  uint16_t address = (reg[R_PC] + PCoffset9);
+  write_to_memory(address, reg[SR]);
+}
+
+void op_sti(uint16_t bits)
+{
+  uint16_t SR = (bits >> 9) & 0x7;
+  uint16_t PCoffset9 = get_sign_extension(bits, 9);
+  uint16_t address = (reg[R_PC] + PCoffset9);
+}
+
+void op_str(uint16_t bits)
+{
+  uint16_t SR = (bits >> 9) & 0x7;
+  uint16_t DR = (bits >> 6) & 0x7;
+  uint16_t PCoffset6 = get_sign_extension(bits, 6);
+  uint16_t address = reg[DR] + PCoffset6;
+  write_to_memory(address, reg[SR]);
 }
