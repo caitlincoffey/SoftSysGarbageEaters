@@ -1,6 +1,24 @@
 #include "utils.h"
 #include "memory.h"
 
+/* memory-mapped I/O: memory addresses xFE00 through xFFFF have been allocated to designate each I/O device register. */
+enum mem_registers
+{
+  M_KBSR = 0xFE00, // keyboard status register
+  M_KBDR = 0xFE02, // keyboard data register
+  M_DSR = 0xFE04,  // display status register
+  M_DDR = 0xFE06,  // display data register
+  M_MCR = 0xFFFE   // machine control register
+};
+
+/* condition flags: three 1-bit registers: N (negative) Z (zero) P (positive) */
+enum cond_flag
+{
+    F_N = 100,
+    F_Z = 010,
+    F_P = 001
+};
+
 /* General Helper Functions */
 
 uint16_t get_sign_extension(uint16_t n, int num_bits)

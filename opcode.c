@@ -1,5 +1,5 @@
 #include "opcode.h"
-#include "memory.h"
+#include "utils.h"
 
 /* trap codes: 6 trap code operations */
 enum trap_codes
@@ -118,8 +118,6 @@ void op_lea(uint16_t bits)
   update_flag(reg[DR]);
 }
 
-// TODO: decide if we can put trap vector table in memory or if we should just implement functions
-
 void op_trap(uint16_t bits)
 {
   /* First R7 is loaded with the incremented PC. (This enables a return to the instruction
@@ -197,7 +195,7 @@ void trap_puts()
    * (A character string consisting of an odd number of characters to be written will have x00 in bits [15:8] of the memory location containing the last character to be written.)
    * Writing terminates with the occurrence of x0000 in a memory location.
    */
-  uint16_t *start = memory[reg[R_0]];
+  uint16_t *start = memory[reg[R_0]]; // TODO: fix
   while (*start)
   {
     // QUESTION: do we have to convert back to big endian
