@@ -2,6 +2,7 @@
 #define OPCODE_H_
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 /** instruction set: 14 instructions, 1 reserved, 1 unused

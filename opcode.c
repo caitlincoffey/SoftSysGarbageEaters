@@ -215,6 +215,7 @@ void trap_halt()
   /** Halt execution and print a message on the console. */
   // TODO: figure out how to halt
   // need to stop main loop
+  exit(1);
 }
 
 void op_br(uint16_t bits)
