@@ -1,4 +1,4 @@
-/**
+/*
  * Garbage Eaters: LC-3 Virtual Machine
  * 
  * Main loop follows Classic RISC Pipeline
@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "opcode.h"
-#include "memory.h"
 #include "utils.h"
 
 
