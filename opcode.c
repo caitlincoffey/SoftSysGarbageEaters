@@ -212,6 +212,7 @@ void op_sti(uint16_t bits)
   uint16_t SR = (bits >> 9) & 0x7;
   uint16_t PCoffset9 = get_sign_extension(bits, 9);
   uint16_t address = (reg[R_PC] + PCoffset9);
+  write_to_memory(read_from_memory(address), reg[SR]);
 }
 
 void op_str(uint16_t bits)
