@@ -40,7 +40,7 @@ int main(int argc, const char *argv[])
   }
 
   // File path to to program LC-3 should run
-  char *path_to_code = argv[1];
+  const char *path_to_code = argv[1];
   read_program_code_into_memory(path_to_code);
 
   /* 0x3000 is the default PC position, start of memory available for user programs. */
