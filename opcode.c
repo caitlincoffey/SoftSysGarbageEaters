@@ -195,17 +195,19 @@ void trap_puts()
    * (A character string consisting of an odd number of characters to be written will have x00 in bits [15:8] of the memory location containing the last character to be written.)
    * Writing terminates with the occurrence of x0000 in a memory location.
    */
-  uint16_t *start = memory[reg[R_0]]; // TODO: fix
-  while (*start)
+  uint16_t start = reg[R_0];
+  uint16_t val = read_from_memory(start);
+  while (val)
   {
     // QUESTION: do we have to convert back to big endian
-    char first_char = *start & 0xFF;
+    char first_char = val & 0xFF;
     putc(first_char, stdout);
-    char second_char = *start >> 8;
+    char second_char = val >> 8;
     if (second_char) {
       // if second char exists
       putc(first_char, stdout);
     }
+    uint16_t val = read_from_memory(start++);
   }
   fflush(stdout); // move the buffered data to console 
 }
