@@ -1,6 +1,7 @@
 #include "utils.h"
 
 uint16_t reg[R_SIZE];
+uint16_t memory[65535];
 
 /* memory-mapped I/O: memory addresses xFE00 through xFFFF have been allocated to designate each I/O device register. */
 enum mem_registers
