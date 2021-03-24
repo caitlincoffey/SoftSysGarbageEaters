@@ -1,5 +1,23 @@
 /**
  * Garbage Eaters: LC-3 Virtual Machine
+ * 
+ * Main loop follows Classic RISC Pipeline
+ * 1. IF. instruction fetch
+ *  load one instruction from memory at the address of PC register,
+ *  increment PC register by 4,
+ *  and choose whether to take that as next PC or to take result of a branch / jump calculation as the next PC
+ *
+ * 2. ID. instruction decode and register fetch
+ * look at opcode to determine which type of instruction it should perform and on what values,
+ * if instruction is a branch or jump, the target address of the branch or jump is computed in parallel with reading the register file
+ *
+ * 3. EX. execute
+ * 
+ * 4. MEM. memory access
+ * 
+ * 5. WB. register write back
+ *  update general registers with output
+ *  update COND register with N Z P value
  *
  * Date: 03/06/2021
  * Authors: Gati Aher, Navi Sai, Caitlin Coffey, Zoe McGinnis
@@ -8,21 +26,18 @@
 /* includes */
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "opcode.h"
 #include "memory.h"
-#include "decode.h"
 #include "utils.h"
 
 
 int main(int argc, const char *argv[])
 {
-  // NOTE: if anything goes wrong, change this status
-  int status = 1;
-
   if (argc <= 1)
   {
     fprintf(stderr, "Error: No input files\n");
-    return 0;
+    return EXIT_FAILURE;
   }
 
   // File path to to program LC-3 should run
@@ -35,32 +50,12 @@ int main(int argc, const char *argv[])
 
   while (1)
   {
-    // Follow Classic RISC Pipeline
-    /**
-         * 1. IF. instruction fetch
-         * load one instruction from memory at the address of PC register,
-         * increment PC register by 4,
-         * and choose whether to take that as next PC or to take result of a branch / jump calculation as the next PC
-         * */
     uint16_t instruction = read_from_memory(reg[R_PC]++); // load instruction from memory
     uint16_t opcode = instruction >> 12;
 
-    /**
-         * 2. ID. instruction decode and register fetch
-         * look at opcode to determine which type of instruction it should perform and on what values,
-         * if instruction is a branch or jump, the target address of the branch or jump is computed in parallel with reading the register file
-         * */
     switch (opcode)
     {
-    case OP_BR:
-      // NOTE: I think 3 and 4 and specific to the opcode and should happen in the function
-      // QUESTION: is 5 going to be the same for all the opcodes?
-      /* 3. EX. execute */
-      /* 4. MEM. memory access */
-      /** 5. WB. register write back
-             * update general registers with output
-             * update COND register with N Z P value
-             * */
+    case OP_BR:  
       op_br(instruction);
       break;
     case OP_ADD:   /* add */
@@ -85,7 +80,7 @@ int main(int argc, const char *argv[])
       op_str(instruction);
       break;
     case OP_RTI:    /* unused */
-      op_rti(instruction);
+      //op_rti(instruction);
       break;
     case OP_NOT:    /* bitwise not */
       op_not(instruction);
@@ -100,18 +95,17 @@ int main(int argc, const char *argv[])
       op_jmp(instruction);
       break;
     case OP_RES:    /* reserved (unused) */
-      op_res(instruction);
+      //op_res(instruction);
       break;
     case OP_LEA:   /* load effective address */
       op_lea(instruction);
       break;
     case OP_TRAP:    /* execute trap */
-      // TODO implement
+      op_trap(instruction);
       break;
     default:
       break;
     }
   }
-
-  return status;
+  return EXIT_SUCCESS;
 }
