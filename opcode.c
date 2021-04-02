@@ -174,15 +174,15 @@ void trap_puts()
       // if second char exists
       putc(first_char, stdout);
     }
-    val = read_from_memory(start++);
+    val = read_from_memory(++start);
   }
-  fflush(stdout); // move the buffered data to console 
+  fflush(stdout); // move the buffered data to console
 }
 
 void trap_halt()
 {
   /** Halt execution and print a message on the console. */
-  puts("HALT\n");
+  puts("\nHALT\n");
   restore_input_buffering();
   exit(1);
 }
@@ -193,7 +193,6 @@ void op_trap(uint16_t bits)
 physically following the TRAP instruction in the original program after the service
 routine has completed execution.) */
   uint16_t trapvector8 = bits & 0xFF;
-  reg[R_7] = reg[R_PC];
   switch (trapvector8)
   {
   case T_GETC:
@@ -217,15 +216,14 @@ routine has completed execution.) */
   default:
     break;
   }
-  reg[R_PC] = read_from_memory(trapvector8);
 }
 
 void op_br(uint16_t bits)
 {
-  /* Breaks program upon reaching a certain value */
+  /* Branch program upon reaching a certain value */
   uint16_t pc_offset = get_sign_extension(bits & 0x1FF, 9);
   uint16_t conditional = (bits >> 9) & 0x7;
-  if (conditional == reg[R_F]) { // is R_F a conditional register?
+  if (conditional & reg[R_F]) { // is R_F a conditional register?
     reg[R_PC] += pc_offset;
   }
 }
@@ -242,7 +240,7 @@ void op_jsr(uint16_t bits)
   /* Jumping into a new address and linking back prev location */
 
   // assigning program counter to temp register so we can link back
-  reg[R_7] = reg[R_PC];
+  uint16_t temp = reg[R_PC];
 
   // checking if opcode indicates jsr or jsrr
   uint16_t jsr_flag = (bits >> 11) & 1;
@@ -257,6 +255,8 @@ void op_jsr(uint16_t bits)
     uint16_t r1 = (bits >> 6) & 0x7;
     reg[R_PC] = reg[r1]; // jump to register val
   }
+
+  reg[R_7] = temp;
 }
 
 void op_st(uint16_t bits)
