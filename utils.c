@@ -102,7 +102,9 @@ int read_program_code_into_memory(const char *path_to_code)
   uint16_t *point_to_mem = memory + program_start;
 
   // reading in 16-bit increments
-  while (fread(point_to_mem, 16, max_space, code_file) > 0) {
+  size_t read_bits = fread(point_to_mem, 16, max_space, code_file);
+  
+  while (read_bits-- > 0) {
     // converting to little endian
     *point_to_mem = (*point_to_mem << 8) | (*point_to_mem >> 8);
     point_to_mem++;
@@ -124,7 +126,7 @@ uint16_t check_key()
     return select(1, &readfds, NULL, NULL, &timeout) != 0;
 }
 
-struct termios original_tio;
+struct termios original_tio, new_tio;
 
 void disable_input_buffering()
 {
@@ -136,7 +138,8 @@ void disable_input_buffering()
 
 void restore_input_buffering()
 {
-    tcsetattr(STDIN_FILENO, TCSANOW, &original_tio);
+  /* restore the old port settings */
+  tcsetattr(STDIN_FILENO, TCSANOW, &original_tio);
 }
 
 void handle_interrupt(int signal)
