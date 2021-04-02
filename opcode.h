@@ -28,27 +28,19 @@ enum instruction_set
    OP_TRAP    /* execute trap */
  };
 
+void op_br(uint16_t bits);
 void op_add(uint16_t bits);
-void op_and(uint16_t bits);
-void op_not(uint16_t bits);
 void op_ld(uint16_t bits);
-void op_ldi(uint16_t bits);
+void op_st(uint16_t bits);
+void op_jsr(uint16_t bits);
+void op_and(uint16_t bits);
 void op_ldr(uint16_t bits);
+void op_str(uint16_t bits);
+void op_not(uint16_t bits);
+void op_ldi(uint16_t bits);
+void op_sti(uint16_t bits);
+void op_jmp(uint16_t bits);
 void op_lea(uint16_t bits);
 void op_trap(uint16_t bits);
-void op_st(uint16_t bits);
-void op_sti(uint16_t bits);
-void op_str(uint16_t bits);
-void op_br(uint16_t bits);
-void op_jmp(uint16_t bits);
-void op_jsr(uint16_t bits);
-void op_trap(uint16_t bits);
-
-void trap_getc();
-void trap_out();
-void trap_puts();
-void trap_in();
-void trap_puts();
-void trap_halt();
 
 #endif
