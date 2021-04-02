@@ -118,39 +118,6 @@ void op_lea(uint16_t bits)
   update_flag(reg[DR]);
 }
 
-void op_trap(uint16_t bits)
-{
-  /* First R7 is loaded with the incremented PC. (This enables a return to the instruction
-physically following the TRAP instruction in the original program after the service
-routine has completed execution.) */
-  uint16_t trapvector8 = bits & 0xFF;
-  reg[R_7] = reg[R_PC];
-  switch (trapvector8)
-  {
-  case T_GETC:
-    trap_getc();
-    break;
-  case T_OUT:
-    trap_out();
-    break;
-  case T_PUTS:
-    trap_puts();
-    break;
-  case T_IN:
-    trap_in();
-    break;
-  case T_PUTSP:
-    trap_puts();
-    break;
-  case T_HALT:
-    trap_halt();
-    break;
-  default:
-    break;
-  }
-  reg[R_PC] = read_from_memory(trapvector8);
-}
-
 void trap_getc()
 {
   /**
@@ -207,7 +174,7 @@ void trap_puts()
       // if second char exists
       putc(first_char, stdout);
     }
-    uint16_t val = read_from_memory(start++);
+    val = read_from_memory(start++);
   }
   fflush(stdout); // move the buffered data to console 
 }
@@ -215,9 +182,42 @@ void trap_puts()
 void trap_halt()
 {
   /** Halt execution and print a message on the console. */
-  // TODO: figure out how to halt
-  // need to stop main loop
+  puts("HALT\n");
+  restore_input_buffering();
   exit(1);
+}
+
+void op_trap(uint16_t bits)
+{
+  /* First R7 is loaded with the incremented PC. (This enables a return to the instruction
+physically following the TRAP instruction in the original program after the service
+routine has completed execution.) */
+  uint16_t trapvector8 = bits & 0xFF;
+  reg[R_7] = reg[R_PC];
+  switch (trapvector8)
+  {
+  case T_GETC:
+    trap_getc();
+    break;
+  case T_OUT:
+    trap_out();
+    break;
+  case T_PUTS:
+    trap_puts();
+    break;
+  case T_IN:
+    trap_in();
+    break;
+  case T_PUTSP:
+    trap_puts();
+    break;
+  case T_HALT:
+    trap_halt();
+    break;
+  default:
+    break;
+  }
+  reg[R_PC] = read_from_memory(trapvector8);
 }
 
 void op_br(uint16_t bits)
@@ -282,14 +282,4 @@ void op_str(uint16_t bits)
   uint16_t PCoffset6 = get_sign_extension(bits, 6);
   uint16_t address = reg[DR] + PCoffset6;
   write_to_memory(address, reg[SR]);
-}
-
-void op_ret(uint16_t bits)
-{
-  exit(1);
-}
-
-void op_rti(uint16_t bits)
-{
-  exit(1);
 }
