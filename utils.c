@@ -55,13 +55,20 @@ Update the condition flag register depending on the passed in value.
 
 uint16_t read_from_memory(uint16_t address)
 {
-
-  // if (address == kbsr) { // placeholder
-  //   // we have some key -> hashing
-  //   // hashing
-  //   // translating address to something usable
-  // }
-
+  if (address == M_KBSR) {
+    // we check to see if the address is coming from keyboard status
+    if (check_key()) {
+      // updating the value at keyboard status back to 0 because the hardware won't do it
+      memory[M_KBSR] = (1 << 15);
+      // accessing last char from keyboard data register because we know that we need the value,
+      // as it just updated
+      memory[M_KBDR] = getchar();
+    }
+    else {
+      // updating the value at keyboard status back to 0 because the hardware won't do it
+      memory[M_KBSR] = 0;
+    }
+  }
   return memory[address];
 }
 
@@ -138,4 +145,3 @@ void handle_interrupt(int signal)
     printf("\n");
     exit(-2);
 }
-
