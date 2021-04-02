@@ -58,7 +58,7 @@ uint16_t read_from_memory(uint16_t address)
   if (address == M_KBSR) {
     // we check to see if the address is coming from keyboard status
     if (check_key()) {
-      // updating the value at keyboard status back to 0 because the hardware won't do it
+      // keeping track of status
       memory[M_KBSR] = (1 << 15);
       // accessing last char from keyboard data register because we know that we need the value,
       // as it just updated
