@@ -27,6 +27,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/termios.h>
+#include <sys/mman.h>
+
 #include "opcode.h"
 #include "utils.h"
 
@@ -38,6 +46,10 @@ int main(int argc, const char *argv[])
     fprintf(stderr, "Error: No input files\n");
     return EXIT_FAILURE;
   }
+
+  // make it work with unix terminal
+  signal(SIGINT, handle_interrupt);
+  disable_input_buffering();
 
   // File path to to program LC-3 should run
   const char *path_to_code = argv[1];
@@ -106,5 +118,9 @@ int main(int argc, const char *argv[])
       break;
     }
   }
+
+  // restore terminal state
+  restore_input_buffering();
+
   return EXIT_SUCCESS;
 }
