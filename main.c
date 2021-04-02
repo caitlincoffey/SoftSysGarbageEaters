@@ -48,7 +48,7 @@ int main(int argc, const char *argv[])
   }
 
   // make it work with unix terminal
-  signal(SIGINT, handle_interrupt);
+  // signal(SIGABRT | SIGINT, handle_interrupt);
   disable_input_buffering();
 
   // File path to to program LC-3 should run
