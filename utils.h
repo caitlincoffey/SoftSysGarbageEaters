@@ -46,5 +46,7 @@ int read_program_code_into_memory(const char *path_to_code);
 uint16_t check_key();
 
 void handle_interrupt(int signal);
+void restore_input_buffering();
+void disable_input_buffering();
 
 #endif
