@@ -1,6 +1,11 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <string.h>
+#include <stdio.h>
+#include <sys/termios.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "opcode.h"
 
 extern uint16_t memory[65535];
@@ -37,5 +42,9 @@ void update_flag(uint16_t value);
 uint16_t read_from_memory(uint16_t address);
 void write_to_memory(uint16_t address, uint16_t value);
 int read_program_code_into_memory(const char *path_to_code);
+
+uint16_t check_key();
+
+void handle_interrupt(int signal);
 
 #endif
