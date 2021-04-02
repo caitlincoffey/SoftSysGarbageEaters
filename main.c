@@ -56,7 +56,7 @@ int main(int argc, const char *argv[])
   read_program_code_into_memory(path_to_code);
 
   /* 0x3000 is the default PC position, start of memory available for user programs. */
-  int PC_INIT = 0x3000;
+  uint16_t PC_INIT = 0x3000;
   reg[R_PC] = PC_INIT;
 
   while (1)
