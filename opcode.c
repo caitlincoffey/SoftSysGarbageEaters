@@ -283,3 +283,13 @@ void op_str(uint16_t bits)
   uint16_t address = reg[DR] + PCoffset6;
   write_to_memory(address, reg[SR]);
 }
+
+void op_ret(uint16_t bits)
+{
+  exit(1);
+}
+
+void op_rti(uint16_t bits)
+{
+  exit(1);
+}
