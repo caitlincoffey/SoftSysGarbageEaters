@@ -13,19 +13,12 @@ enum mem_registers
   M_MCR = 0xFFFE   // machine control register
 };
 
-/* condition flags: three 1-bit registers: N (negative) Z (zero) P (positive) */
-enum cond_flag
-{
-    F_N = 100,
-    F_Z = 010,
-    F_P = 001
-};
-
 /* General Helper Functions */
 
 uint16_t get_sign_extension(uint16_t n, int num_bits)
 {
-  uint16_t n_first = n >> num_bits;
+  n = n & (0xFFFF >> (16 - num_bits));
+  uint16_t n_first = n >> (num_bits - 1);
   if (n_first & 0x1)
   {
     uint16_t var = ((0xFFFF << num_bits) | n);
@@ -91,7 +84,7 @@ int read_program_code_into_memory(const char *path_to_code)
   /* The first 16 bits of the program file
   specify the address in memory where the program should start. */
   uint16_t program_start;
-  fread(&program_start, 16, 1, code_file);
+  fread(&program_start, sizeof(uint16_t), 1, code_file);
   // convert to little endian
   program_start = (program_start << 8) | (program_start >> 8);
 
@@ -102,8 +95,7 @@ int read_program_code_into_memory(const char *path_to_code)
   uint16_t *point_to_mem = memory + program_start;
 
   // reading in 16-bit increments
-  size_t read_bits = fread(point_to_mem, 16, max_space, code_file);
-  
+  size_t read_bits = fread(point_to_mem, sizeof(uint16_t), max_space, code_file);
   while (read_bits-- > 0) {
     // converting to little endian
     *point_to_mem = (*point_to_mem << 8) | (*point_to_mem >> 8);

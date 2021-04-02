@@ -26,6 +26,13 @@ enum registers
     R_SIZE
 };
 
+enum cond_flag
+{
+    F_N = 100,
+    F_Z = 010,
+    F_P = 001
+};
+
 extern uint16_t reg[R_SIZE];
 
 // enum mem_registers
