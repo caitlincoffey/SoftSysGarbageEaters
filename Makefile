@@ -1,11 +1,16 @@
+all: GarbageEater
+
 utils.o: utils.c utils.h
 	gcc -Wall -c utils.c
 
 opcode.o: opcode.c opcode.h utils.h
 	gcc -Wall -c opcode.c
 
-main.o: main.c opcode.h utils.h
-	gcc -Wall -c main.c
+GarbageEater: opcode.o utils.o main.c
+	gcc -g -o GarbageEater main.c opcode.o utils.o -Wall
 
-main: opcode.o utils.o main.o
-	gcc -g -o trout opcode.o utils.o main.o -Wall
+clean:
+	rm -f GarbageEater opcode.o utils.o
+
+cleanProgram:
+	rm -f programs/*.obj programs/*.sym 
