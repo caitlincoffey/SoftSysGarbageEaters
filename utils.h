@@ -28,10 +28,12 @@ enum registers
 
 enum cond_flag
 {
-    F_N = 100,
-    F_Z = 010,
-    F_P = 001
+    F_N = 4,
+    F_Z = 2,
+    F_P = 1
 };
+
+extern uint16_t cond_flag[4];
 
 extern uint16_t reg[R_SIZE];
 

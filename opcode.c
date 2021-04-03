@@ -20,6 +20,7 @@ enum trap_codes
 *  - use bit-shift to erase bits right of target section
 */
 
+// ✅
 void op_add(uint16_t bits)
  {
    /* destination register (DR) */
@@ -30,18 +31,19 @@ void op_add(uint16_t bits)
    if ((bits >> 5) & 0x1)
    {
      /* mode 1: add a small constant */
-     uint16_t imm5 = get_sign_extension(bits & 0x1, 5);
+     uint16_t imm5 = get_sign_extension(bits & 0b11111, 5);
      reg[DR] = reg[SR1] + imm5;
    }
    else
    {
      /* mode 2: add value from second source register */
-     uint16_t SR2 = (bits >> 0);
+     uint16_t SR2 = (bits >> 0) & 0x7;
      reg[DR] = reg[SR1] + reg[SR2];
    }
    update_flag(reg[DR]);
  }
 
+// ✅
 void op_and(uint16_t bits)
  {
    /* destination register (DR) */
@@ -64,7 +66,7 @@ void op_and(uint16_t bits)
    update_flag(reg[DR]);
  }
 
-
+// ✅
 void op_not(uint16_t bits)
 {
   /* destination register (DR) */
@@ -218,12 +220,15 @@ routine has completed execution.) */
   }
 }
 
+// ✅
 void op_br(uint16_t bits)
 {
   /* Branch program upon reaching a certain value */
-  uint16_t pc_offset = get_sign_extension(bits & 0x1FF, 9);
-  uint16_t conditional = (bits >> 9) & 0x7;
-  if (conditional & reg[R_F]) { // is R_F a conditional register?
+  uint16_t pc_offset = bits & 0b111111111;
+  uint16_t n = (bits & 0b100000000000) >> 9;
+  uint16_t z = (bits & 0b10000000000) >> 9;
+  uint16_t p = (bits & 0b1000000000) >> 9;
+  if ((n == 4) || (z == 2) || (p == 1)) {
     reg[R_PC] += pc_offset;
   }
 }
