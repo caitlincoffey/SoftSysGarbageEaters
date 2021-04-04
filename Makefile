@@ -12,5 +12,8 @@ GarbageEater: opcode.o utils.o main.c
 clean:
 	rm -f GarbageEater opcode.o utils.o
 
+test: test.c utils.c opcode.c
+	gcc -o test test.c utils.c opcode.c
+
 cleanProgram:
-	rm -f programs/*.obj programs/*.sym 
+	rm -f programs/*.obj programs/*.sym

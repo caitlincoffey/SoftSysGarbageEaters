@@ -7,7 +7,7 @@
 #include "minunit.h"
 
 int tests_run = 0;
-int value; 
+int value;
 int code;
 
 static char *test_add() {
@@ -67,6 +67,25 @@ static char *test_br() {
     return NULL;
 }
 
+static char *test_jmp() {
+  code = 0;
+  reg[2] = 0b011;
+  reg[R_PC] = 0;
+  op_jmp(0b1100000010000000);
+  char *message = "test JMP failed";
+  mu_assert(message, reg[R_PC] == reg[2]);
+  return NULL;
+}
+
+static char *test_jsr() {
+  code = 0;
+  reg[R_PC] = 0;
+  op_jsr(0b0100100000000010);
+  char *message = "test JSR failed";
+  mu_assert(message, reg[R_PC] == 2);
+  return NULL;
+}
+
 static char * all_tests() {
     mu_run_test(test_add);
     mu_run_test(test_addi);
@@ -74,6 +93,8 @@ static char * all_tests() {
     mu_run_test(test_andi);
     mu_run_test(test_not);
     mu_run_test(test_br);
+    mu_run_test(test_jmp);
+    mu_run_test(test_jsr);
     return NULL;
 }
 
@@ -88,4 +109,3 @@ int main(int argc, char **argv) {
 
     return result != 0;
 }
- 
