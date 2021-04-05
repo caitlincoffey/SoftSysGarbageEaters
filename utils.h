@@ -28,9 +28,9 @@ enum registers
 
 enum cond_flag
 {
-    F_N = 4,
-    F_Z = 2,
-    F_P = 1
+    F_P = 1 << 0, /* P */
+    F_Z = 1 << 1, /* Z */
+    F_N = 1 << 2, /* N */
 };
 
 extern uint16_t cond_flag[4];
