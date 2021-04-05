@@ -10,7 +10,7 @@ GarbageEater: opcode.o utils.o main.c
 	gcc -g -o GarbageEater main.c opcode.o utils.o -Wall
 	
 clean:
-	rm -f GarbageEater opcode.o utils.o
+	rm -f GarbageEater opcode.o utils.o test
 
 test: test.c utils.c opcode.c
 	gcc -o test test.c utils.c opcode.c
