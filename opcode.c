@@ -77,6 +77,7 @@ void op_not(uint16_t bits)
   update_flag(reg[DR]);
 }
 
+// ✅
 void op_ld(uint16_t bits)
 {
   /* destination register (DR) */
@@ -87,18 +88,20 @@ void op_ld(uint16_t bits)
   update_flag(reg[DR]);
 }
 
+// ✅
 void op_ldi(uint16_t bits)
 {
   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
   /* (PCoffset9) */
-  uint16_t PCoffset9 = bits & 0x9;
+  uint16_t PCoffset9 = bits & 0b111111111;
   uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   uint16_t address_2 = read_from_memory(address_1);
   reg[DR] = read_from_memory(address_2);
   update_flag(reg[DR]);
 }
 
+// ✅
 void op_ldr(uint16_t bits)
 {
   /* destination register (DR) */
@@ -110,6 +113,7 @@ void op_ldr(uint16_t bits)
   update_flag(reg[DR]);
 }
 
+// ✅
 void op_lea(uint16_t bits)
 {
   /* destination register (DR) */
@@ -120,6 +124,7 @@ void op_lea(uint16_t bits)
   update_flag(reg[DR]);
 }
 
+// ✅
 void trap_getc()
 {
   /**
@@ -128,9 +133,10 @@ void trap_getc()
    * Its ASCII code is copied into R0. 
    * The high eight bits of R0 are cleared.
    */
-  reg[R_0] = getchar() & 0xFF;
+  reg[R_0] = getchar() & 0b11111111;
 }
 
+// ✅
 void trap_out()
 {
   /**
@@ -142,6 +148,7 @@ void trap_out()
   fflush(stdout);
 }
 
+// not taking in any input : super unsure why
 void trap_in()
 {
   /**
@@ -154,6 +161,7 @@ void trap_in()
   trap_out();
 }
 
+// ✅
 void trap_puts()
 {
   /**
@@ -181,6 +189,7 @@ void trap_puts()
   fflush(stdout); // move the buffered data to console
 }
 
+// ✅
 void trap_halt()
 {
   /** Halt execution and print a message on the console. */
@@ -189,12 +198,13 @@ void trap_halt()
   exit(1);
 }
 
+// ✅
 void op_trap(uint16_t bits)
 {
   /* First R7 is loaded with the incremented PC. (This enables a return to the instruction
 physically following the TRAP instruction in the original program after the service
 routine has completed execution.) */
-  uint16_t trapvector8 = bits & 0xFF;
+  uint16_t trapvector8 = bits & 0b11111111;
   switch (trapvector8)
   {
   case T_GETC:
@@ -233,6 +243,7 @@ void op_br(uint16_t bits)
   }
 }
 
+// ✅
 void op_jmp(uint16_t bits)
 {
   /* Jumping into a new address! :D */
@@ -240,6 +251,7 @@ void op_jmp(uint16_t bits)
   reg[R_PC] = reg[r1]; // adjust program counter to move to the new place
 }
 
+// ✅
 void op_jsr(uint16_t bits)
 {
   /* Jumping into a new address and linking back prev location */
@@ -263,7 +275,7 @@ void op_jsr(uint16_t bits)
 
   reg[R_7] = temp;
 }
-
+ // ✅
 void op_st(uint16_t bits)
 {
   uint16_t SR = (bits >> 9) & 0x7;
@@ -272,6 +284,7 @@ void op_st(uint16_t bits)
   write_to_memory(address, reg[SR]);
 }
 
+ // ✅
 void op_sti(uint16_t bits)
 {
   uint16_t SR = (bits >> 9) & 0x7;
@@ -280,11 +293,12 @@ void op_sti(uint16_t bits)
   write_to_memory(read_from_memory(address), reg[SR]);
 }
 
+ // ✅
 void op_str(uint16_t bits)
 {
   uint16_t SR = (bits >> 9) & 0x7;
-  uint16_t DR = (bits >> 6) & 0x7;
+  uint16_t baseR = (bits >> 6) & 0x7;
   uint16_t PCoffset6 = get_sign_extension(bits, 6);
-  uint16_t address = reg[DR] + PCoffset6;
+  uint16_t address = baseR + PCoffset6;
   write_to_memory(address, reg[SR]);
 }
