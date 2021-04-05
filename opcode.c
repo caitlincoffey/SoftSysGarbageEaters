@@ -40,7 +40,8 @@ void op_add(uint16_t bits)
      uint16_t SR2 = (bits >> 0) & 0x7;
      reg[DR] = reg[SR1] + reg[SR2];
    }
-   update_flag(reg[DR]);
+  //  update_flag(reg[DR]);
+   update_flag(DR);
  }
 
 // ✅
@@ -63,7 +64,8 @@ void op_and(uint16_t bits)
      uint16_t SR2 = bits & 0x7;
      reg[DR] = reg[SR1] & reg[SR2];
    }
-   update_flag(reg[DR]);
+  //  update_flag(reg[DR]);
+   update_flag(DR);
  }
 
 // ✅
@@ -74,7 +76,8 @@ void op_not(uint16_t bits)
   /* first source register (SR1) */
   uint16_t SR1 = (bits >> 6) & 0x7;
   reg[DR] = ~reg[SR1];
-  update_flag(reg[DR]);
+  // update_flag(reg[DR]);
+  update_flag(DR);
 }
 
 // ✅
@@ -85,20 +88,29 @@ void op_ld(uint16_t bits)
   uint16_t PCoffset9 = bits & 0x1FF;
   uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   reg[DR] = read_from_memory(address);
-  update_flag(reg[DR]);
+  // update_flag(reg[DR]);
+  update_flag(DR);
 }
 
 // ✅
 void op_ldi(uint16_t bits)
 {
-  /* destination register (DR) */
+  // /* destination register (DR) */
+  // uint16_t DR = (bits >> 9) & 0x7;
+  // /* (PCoffset9) */
+  // uint16_t PCoffset9 = bits & 0b111111111;
+  // uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
+  // uint16_t address_2 = read_from_memory(address_1);
+  // reg[DR] = read_from_memory(address_2);
+  // update_flag(reg[DR]);
+
+   /* destination register (DR) */
   uint16_t DR = (bits >> 9) & 0x7;
-  /* (PCoffset9) */
-  uint16_t PCoffset9 = bits & 0b111111111;
-  uint16_t address_1 = reg[R_PC] + get_sign_extension(PCoffset9, 9);
-  uint16_t address_2 = read_from_memory(address_1);
-  reg[DR] = read_from_memory(address_2);
-  update_flag(reg[DR]);
+  /* PCoffset 9*/
+  uint16_t PCoffset9 = get_sign_extension(bits & 0x1FF, 9);
+  /* add pc_offset to the current PC, look at that memory location to get the final address */
+  reg[DR] = read_from_memory(read_from_memory(reg[R_PC] + PCoffset9));
+  update_flag(DR);
 }
 
 // ✅
@@ -110,7 +122,8 @@ void op_ldr(uint16_t bits)
   uint16_t offset6 = bits & 0x3f;
   uint16_t address = reg[BaseR] + get_sign_extension(offset6, 6);
   reg[DR] = read_from_memory(address);
-  update_flag(reg[DR]);
+  // update_flag(reg[DR]);
+  update_flag(DR);
 }
 
 // ✅
@@ -121,7 +134,8 @@ void op_lea(uint16_t bits)
   uint16_t PCoffset9 = bits & 0x1FF;
   uint16_t address = reg[R_PC] + get_sign_extension(PCoffset9, 9);
   reg[DR] = address;
-  update_flag(reg[DR]);
+  // update_flag(reg[DR]);
+  update_flag(DR);
 }
 
 // ✅
@@ -149,6 +163,7 @@ void trap_out()
   fflush(stdout);
 }
 
+// ✅
 void trap_in()
 {
   /**
@@ -235,13 +250,12 @@ routine has completed execution.) */
 // ✅
 void op_br(uint16_t bits)
 {
-  /* Branch program upon reaching a certain value */
-  uint16_t pc_offset = bits & 0b111111111;
-  uint16_t n = (bits & 0b100000000000) >> 9;
-  uint16_t z = (bits & 0b10000000000) >> 9;
-  uint16_t p = (bits & 0b1000000000) >> 9;
-  if ((n == 4) || (z == 2) || (p == 1)) {
-    reg[R_PC] += pc_offset;
+  
+  uint16_t pc_offset = get_sign_extension(bits & 0x1FF, 9);
+  uint16_t cond_flag = (bits >> 9) & 0x7;
+  if (cond_flag & reg[R_F])
+  {
+      reg[R_PC] += pc_offset;
   }
 }
 

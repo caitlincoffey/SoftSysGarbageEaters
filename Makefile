@@ -8,7 +8,7 @@ opcode.o: opcode.c opcode.h utils.h
 
 GarbageEater: opcode.o utils.o main.c
 	gcc -g -o GarbageEater main.c opcode.o utils.o -Wall
-
+	
 clean:
 	rm -f GarbageEater opcode.o utils.o
 
