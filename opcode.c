@@ -134,6 +134,7 @@ void trap_getc()
    * The high eight bits of R0 are cleared.
    */
   reg[R_0] = getchar() & 0b11111111;
+  fflush(stdin);
 }
 
 // ✅
@@ -148,7 +149,6 @@ void trap_out()
   fflush(stdout);
 }
 
-// not taking in any input : super unsure why
 void trap_in()
 {
   /**
@@ -157,8 +157,10 @@ void trap_in()
    * The high eight bits of R0 are cleared.
    */
   puts("Enter a character:\n");
-  trap_getc();
-  trap_out();
+  reg[R_0] = getchar() & 0b11111111;   
+  fprintf(stdout, "%c", reg[R_0]);
+  fflush(stdin);
+  fflush(stdout);
 }
 
 // ✅
