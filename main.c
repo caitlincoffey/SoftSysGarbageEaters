@@ -1,6 +1,6 @@
 /*
  * Garbage Eaters: LC-3 Virtual Machine
- * 
+ *
  * Main loop follows Classic RISC Pipeline
  * 1. IF. instruction fetch
  *  load one instruction from memory at the address of PC register,
@@ -12,9 +12,9 @@
  * if instruction is a branch or jump, the target address of the branch or jump is computed in parallel with reading the register file
  *
  * 3. EX. execute
- * 
+ *
  * 4. MEM. memory access
- * 
+ *
  * 5. WB. register write back
  *  update general registers with output
  *  update COND register with N Z P value
@@ -34,16 +34,23 @@
 #include <sys/types.h>
 #include <sys/termios.h>
 #include <sys/mman.h>
+#include <errno.h>
 
 #include "opcode.h"
 #include "utils.h"
 
+extern int errno;
 
 int main(int argc, const char *argv[])
 {
+  int errnum;
   if (argc <= 1)
   {
-    fprintf(stderr, "Error: No input files\n");
+    errno = 2;
+    errnum = errno;
+    fprintf(stderr, "Value of errno:%d\n", errno);
+    perror("Error printed by perror");
+    fprintf(stderr, "Error opening file: %s\n", strerror(errnum));
     return EXIT_FAILURE;
   }
 
@@ -66,7 +73,7 @@ int main(int argc, const char *argv[])
 
     switch (opcode)
     {
-    case OP_BR:  
+    case OP_BR:
       op_br(instruction);
       break;
     case OP_ADD:   /* add */
