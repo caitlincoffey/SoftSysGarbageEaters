@@ -26,14 +26,15 @@ enum registers
     R_SIZE
 };
 
+/* Condition Flags */
 enum cond_flag
 {
-    F_P = 1 << 0, /* P */
-    F_Z = 1 << 1, /* Z */
-    F_N = 1 << 2, /* N */
+    F_P = 1 << 0, // positive
+    F_Z = 1 << 1, // zero
+    F_N = 1 << 2, // negative
 };
 
-extern uint16_t cond_flag[4];
+//extern uint16_t cond_flag[4];
 
 extern uint16_t reg[R_SIZE];
 

@@ -29,21 +29,22 @@ uint16_t get_sign_extension(uint16_t n, int num_bits)
 
 void update_flag(uint16_t value)
 /*
-Update the condition flag register depending on the passed in value.
+ Update the condition flag register depending on the passed in value.
 */
+
 {
-  if (value == 0)
-  {
-    reg[R_F] = F_Z;
-  }
-  else if ((value >> 15 & 0x1) == 1)
-  {
-    reg[R_F] = F_N;
-  }
-  else
-  {
-    reg[R_F] = F_P;
-  }
+    if (reg[value] == 0)
+    {
+        reg[R_F] = F_Z;
+    }
+    else if (reg[value] >> 15) // 1 in msb means it's negative
+    {
+        reg[R_F] = F_N;
+    }
+    else
+    {
+        reg[R_F] = F_P;
+    }
 }
 
 uint16_t read_from_memory(uint16_t address)

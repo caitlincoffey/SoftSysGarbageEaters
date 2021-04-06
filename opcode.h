@@ -1,9 +1,20 @@
 #ifndef OPCODE_H_
 #define OPCODE_H_
 
+// #include <stdint.h>
+// #include <stdlib.h>
+// #include <stdio.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/termios.h>
+#include <sys/mman.h>
+#include <errno.h>
 
 /** instruction set: 14 instructions, 1 reserved, 1 unused
  * represented by 4 bit binary opcodes covering numbers 0-15
