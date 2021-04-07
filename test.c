@@ -133,15 +133,16 @@ static char *test_sti() {
 
 
 static char *test_str() {
-  reg[R_PC] = 0;
+  reg[5] = 5;
   op_str(0b0111101101000101); //register 5 is SR, 5 is PCoffset, 5 is BaseR
   char *message = "test STR failed";
   reg[2] = read_from_memory(10);
-  mu_assert(message, reg[2] == 57);
+  mu_assert(message, reg[2] == 5);
   return NULL;
 }
 
 static char *test_getc() {
+  puts("Type 'a'");
   op_trap(0b1111000000100000); //trapvector8 is x20: getc
   char *message = "test TRAP:getc failed";
   mu_assert(message, reg[R_0] == 97); // enter a for this test
@@ -150,6 +151,7 @@ static char *test_getc() {
 
 static char *test_out() {
   reg[R_0] = 98;
+  puts("This should print 'b'.");
   op_trap(0b1111000000100001); //trapvector8 is x21: out
   char *message = "test TRAP:out failed";
   mu_assert(message, reg[R_0] == 98); // should print b
@@ -159,6 +161,7 @@ static char *test_out() {
 static char *test_puts() {
   reg[R_0] = 0;
   printf("\n");
+  puts("This should print 'abc'.");
   write_to_memory(0, 97);
   write_to_memory(1, 98);
   write_to_memory(2, 99);
@@ -174,12 +177,13 @@ static char *test_halt() {
   printf("\n");
   op_trap(0b1111000000100101); //trapvector8 is x25: halt
   char *message = "test TRAP:halt failed";
-//   mu_assert(message, reg[R_0] == 98); // enter b for this test
+  mu_assert(message, reg[R_0] == 98); // enter b for this test
   return NULL;
 }
 
 static char *test_in() {
   printf("\n");
+  puts("Type 'b'");
   op_trap(0b1111000000100011); //trapvector8 is x23: in
   char *message = "test TRAP:in failed";
   mu_assert(message, reg[R_0] == 98); // enter b for this test
