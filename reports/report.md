@@ -47,7 +47,7 @@ These registers help incrementally store user input and information to display. 
 
 LC-3 also uses disk space in addition to registers. In our implementation, this is represented as an array where each entry can store 16 bits of data. Our implementation of disk space follows the LC-3 specification described in Fig. 1.
 
-<img src="Little%20Computer%203%20Virtual%20Machine%208d754acd344b4e4192bde45d9436f727/Untitled.png" height="300">
+<center><img src="Little%20Computer%203%20Virtual%20Machine%208d754acd344b4e4192bde45d9436f727/Untitled.png" height="400"></center>
 
 Fig 1: Memory map of LC-3 VM.
 
