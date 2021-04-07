@@ -71,7 +71,7 @@ Once the instruction is decoded, the corresponding function that executes its fu
 
 [Instructions](https://www.notion.so/b1b19e2cfe954a4788b5a4d25ff46dc6)
 
-For further information on these instructions, reference the [specs written by lc-3's creaters](http://highered.mheducation.com/sites/0072467509/student_view0/appendices_a__b__c__d____e.html)
+For further information on these instructions, reference the [specs written by LC-3's creators](http://highered.mheducation.com/sites/0072467509/student_view0/appendices_a__b__c__d____e.html)
 
 Since we have 15 opcodes represented by 16 serial digits, we choose to use an enum structure to name possible opcodes. Then, we use a switch statement to execute the logic associated with the opcode. In this way, we virtualize the control unit (CU) and arithmetic logic unit (ALU) components of the CPU.
 
