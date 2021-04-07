@@ -16,10 +16,10 @@ To set up the virtual machine, you should do the following:
 
 - Clone the repository by running `git clone[https://github.com/caitlincoffey/SoftSysGarbageEaters.git](https://github.com/caitlincoffey/SoftSysGarbageEaters.git)` in the terminal
 - Cd into `SoftSysGarbageEaters`
-- Run `make all` to get the executable file to start the virtual machine
+- Run `make` to get the executable file to start the virtual machine
 - Last but not least, run `./GarbageEater <filename.obj`> to use the virtual machine.
 
-Our LC-3 virtual machine runs `.obj` files on Linux/Unix platforms. We have some example files, `2048.obj` and `rogue.obj` if you would like to run these.
+Our LC-3 virtual machine runs `.obj` files on Linux/Unix platforms. We have some example files, `2048.obj` and `rogue.obj` if you would like to run these. Credit to [Justin Meiners and Ryan Pendleton](https://github.com/justinmeiners/lc3-vm) for sharing their LC-3 assembly implementations of `rogue.obj` and `2048.obj`.
 
 ### Dependencies
 
