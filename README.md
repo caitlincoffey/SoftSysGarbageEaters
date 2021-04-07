@@ -1,6 +1,6 @@
 # SoftSysGarbageEaters: A Simple Virtual Machine Implementation
 
-*Zoe M., Gati A., Navi B., Caitlin C.*
+*Gati A., Navi B., Caitlin C., Zoe M.*
 
 **SoftSysGarbageEaters** is a LC-3 virtual machine that can run .obj files on Linux/Unix systems. Note that the virtual machine ***is not*** compatible with Windows due to operating system constraints.
 
@@ -22,6 +22,10 @@ To set up the virtual machine, you should do the following:
 Our LC-3 virtual machine runs `.obj` files on Linux/Unix platforms. We have some example files, `programs/2048.obj` and `programs/rogue.obj` if you would like to run these. 
 
 Credit to [Justin Meiners and Ryan Pendleton](https://github.com/justinmeiners/lc3-vm) for sharing their LC-3 assembly implementations of `rogue.obj` and `2048.obj`.
+
+### Testing
+
+Run unit tests with `make test && ./test`.
 
 ### Dependencies
 

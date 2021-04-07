@@ -14,6 +14,3 @@ clean:
 
 test: test.c utils.c opcode.c
 	gcc -o test test.c utils.c opcode.c
-
-cleanProgram:
-	rm -f programs/*.obj programs/*.sym
