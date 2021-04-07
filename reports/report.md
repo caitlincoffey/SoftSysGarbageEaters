@@ -1,7 +1,6 @@
 # Little Computer 3 Virtual Machine
 
 > Gati Aher
-
 > Caitlin Coffey
 
 > Navi Boyalakuntla
