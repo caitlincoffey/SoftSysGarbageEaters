@@ -1,9 +1,6 @@
 #ifndef OPCODE_H_
 #define OPCODE_H_
 
-// #include <stdint.h>
-// #include <stdlib.h>
-// #include <stdio.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
